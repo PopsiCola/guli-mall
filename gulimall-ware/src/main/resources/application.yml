@@ -1,0 +1,16 @@
+server:
+  port: 11000
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://121.5.9.16:3306/mall_wms?characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: nevergiveup?
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+  global-config:
+    db-config:
+      # 主键自增
+      id-type: auto
