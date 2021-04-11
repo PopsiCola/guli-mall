@@ -28,8 +28,8 @@
         <!--httpcore-->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore</artifactId>
-            <version>4.4.13</version>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.13</version>
         </dependency>
         <!--commons-lang-->
         <dependency>
@@ -65,5 +65,10 @@
             <scope>provided</scope>
         </dependency>
 
+        <!--nacos-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
     </dependencies>
 </project>
