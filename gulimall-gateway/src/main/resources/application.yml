@@ -22,6 +22,13 @@ spring:
           predicates:
             - Query=url,qq
 
+        - id: mall_product
+          uri: lb://mall-product
+          predicates:
+            - Path=/api/product/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
         - id: admin_route
           uri: lb://renren-fast
           predicates:
