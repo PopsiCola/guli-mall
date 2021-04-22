@@ -1,0 +1,17 @@
+server:
+  port: 30000
+
+spring:
+  application:
+    name: mall-third-party
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+#文件系统
+minio:
+  url: http://121.5.9.16:9000
+  accessKey: minio
+  secretKey: nevergiveup?
+  bucketName: mall
