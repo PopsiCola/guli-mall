@@ -4,12 +4,12 @@ import com.llb.mall.thirdpart.util.MinioUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * 上传接口
@@ -30,7 +30,7 @@ public class UploadController {
      * 上传单个文件
      * @return
      */
-    @PostMapping("/thridParty/singleUpload")
+    @RequestMapping("/thirdParty/singleUpload")
     public String singleUpload(@RequestParam("file") MultipartFile file) {
         String uploadFile = "";
         try {
