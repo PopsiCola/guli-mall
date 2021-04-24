@@ -1,9 +1,11 @@
 package com.llb.mall.product.controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,8 @@ import com.llb.mall.product.entity.BrandEntity;
 import com.llb.mall.product.service.BrandService;
 import com.llb.common.utils.PageUtils;
 import com.llb.common.utils.R;
+
+import javax.validation.Valid;
 
 
 /**
@@ -54,9 +58,21 @@ public class BrandController {
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody BrandEntity brand) {
-        brandService.save(brand);
-
+    public R save(@Valid @RequestBody BrandEntity brand, BindingResult result) {
+        if (result.hasErrors()) {
+            Map<String, String> map = new HashMap<>();
+            // 1.获取校验的错误结果
+            result.getFieldErrors().forEach((item) -> {
+                // 错误提示
+                String defaultMessage = item.getDefaultMessage();
+                // 获取错误的属性名字
+                String field = item.getField();
+                map.put(field, defaultMessage);
+            });
+            return R.error(400, "提交的数据不合法").put("data", map);
+        } else {
+            brandService.save(brand);
+        }
         return R.ok();
     }
 
