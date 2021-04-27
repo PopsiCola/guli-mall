@@ -16,7 +16,6 @@ import com.llb.common.utils.PageUtils;
 import com.llb.common.utils.R;
 
 
-
 /**
  * 属性分组
  *
@@ -33,9 +32,12 @@ public class AttrGroupController {
     /**
      * 列表
      */
-    @RequestMapping("/list")
-        public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = attrGroupService.queryPage(params);
+    @RequestMapping("/list/{categoryId}")
+    public R list(@RequestParam Map<String, Object> params,
+                  @PathVariable("categoryId") Long catelogId) {
+        // PageUtils page = attrGroupService.queryPage(params);
+
+        PageUtils page = attrGroupService.queryPage(params, catelogId);
 
         return R.ok().put("page", page);
     }
@@ -45,8 +47,8 @@ public class AttrGroupController {
      * 信息
      */
     @RequestMapping("/info/{attrGroupId}")
-        public R info(@PathVariable("attrGroupId") Long attrGroupId){
-		AttrGroupEntity attrGroup = attrGroupService.getById(attrGroupId);
+    public R info(@PathVariable("attrGroupId") Long attrGroupId) {
+        AttrGroupEntity attrGroup = attrGroupService.getById(attrGroupId);
 
         return R.ok().put("attrGroup", attrGroup);
     }
@@ -55,8 +57,8 @@ public class AttrGroupController {
      * 保存
      */
     @RequestMapping("/save")
-        public R save(@RequestBody AttrGroupEntity attrGroup){
-		attrGroupService.save(attrGroup);
+    public R save(@RequestBody AttrGroupEntity attrGroup) {
+        attrGroupService.save(attrGroup);
 
         return R.ok();
     }
@@ -65,8 +67,8 @@ public class AttrGroupController {
      * 修改
      */
     @RequestMapping("/update")
-        public R update(@RequestBody AttrGroupEntity attrGroup){
-		attrGroupService.updateById(attrGroup);
+    public R update(@RequestBody AttrGroupEntity attrGroup) {
+        attrGroupService.updateById(attrGroup);
 
         return R.ok();
     }
@@ -75,8 +77,8 @@ public class AttrGroupController {
      * 删除
      */
     @RequestMapping("/delete")
-        public R delete(@RequestBody Long[] attrGroupIds){
-		attrGroupService.removeByIds(Arrays.asList(attrGroupIds));
+    public R delete(@RequestBody Long[] attrGroupIds) {
+        attrGroupService.removeByIds(Arrays.asList(attrGroupIds));
 
         return R.ok();
     }
