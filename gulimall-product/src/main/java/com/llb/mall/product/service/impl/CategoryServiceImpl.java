@@ -2,8 +2,7 @@ package com.llb.mall.product.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -54,6 +53,26 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     public void removeMenuByIds(List<Long> asList) {
         // TODO 检查删除的菜单是否被别的地方引用
         baseMapper.deleteBatchIds(asList);
+    }
+
+    /**
+     * 找到catelogId的完整路径
+     * @param catelogId
+     * @return [父,子,孙]
+     */
+    @Override
+    public Long[] findCatelogPath(Long catelogId) {
+         List<Long> paths = new ArrayList<>();
+
+        CategoryEntity categoryEntity = this.getById(catelogId);
+        while (categoryEntity.getParentCid() != 0) {
+            paths.add(categoryEntity.getCatId());
+            categoryEntity = this.getById(categoryEntity.getParentCid());
+        }
+        paths.add(categoryEntity.getCatId());
+        Collections.reverse(paths);
+
+        return paths.toArray(new Long[paths.size()]);
     }
 
     /**
