@@ -9,6 +9,13 @@ spring:
       discovery:
         server-addr: 127.0.0.1:8848
 
+# 设置上传文件大小
+  servlet:
+    multipart:
+      # 单个文件大小（Mb和Kb都可以）
+      max-file-size: 5MB
+      # 总上传的数据大小
+      max-request-size: 30MB
 #文件系统
 minio:
   url: http://121.5.9.16:9000
