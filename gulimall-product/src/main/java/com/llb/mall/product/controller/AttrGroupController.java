@@ -9,6 +9,7 @@ import com.llb.mall.product.service.AttrAttrgroupRelationService;
 import com.llb.mall.product.service.AttrService;
 import com.llb.mall.product.service.CategoryService;
 import com.llb.mall.product.vo.AttrGroupRelationVo;
+import com.llb.mall.product.vo.AttrGroupWithAttrsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +49,19 @@ public class AttrGroupController {
         PageUtils page = attrGroupService.queryPage(params, catelogId);
 
         return R.ok().put("page", page);
+    }
+
+    /**
+     * 根据分类id查出所有的分组以及这些组里面的属性
+     * @param catelogId
+     * @return
+     */
+    @GetMapping("/{catelogId}/withattr")
+    public R getAttrGroupWithAttrs(@PathVariable("catelogId") Long catelogId) {
+        // 1.查出当前分类下的所有属性分组
+        // 2.查出每个属性分组的所有属性
+        List<AttrGroupWithAttrsVo> vos = attrGroupService.getAttrGroupWithAttrsByCatelogId(catelogId);
+        return R.ok().put("data", vos);
     }
 
     /**
