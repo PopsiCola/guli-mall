@@ -1,17 +1,17 @@
-package com.llb.mall.product.vo;
+package com.llb.common.to;
 
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 /**
- * Auto-generated: 2021-05-05 19:30:11
- *
- * @author liulebin
+ * @Author liulebin
+ * @Date 2021/5/6 21:36
  */
 @Data
-public class Bounds {
+public class SpuBoundTo {
 
+    private Long spuId;
     private BigDecimal buyBounds;
     private BigDecimal growBounds;
 }

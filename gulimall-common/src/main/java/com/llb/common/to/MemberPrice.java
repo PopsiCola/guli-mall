@@ -1,4 +1,4 @@
-package com.llb.mall.product.vo;
+package com.llb.common.to;
 
 import lombok.Data;
 
