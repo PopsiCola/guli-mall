@@ -6,13 +6,18 @@ spring:
     name: mall-product
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://121.5.9.16:3306/mall_pms?characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://121.5.9.16:3306/mall_pms?characterEncoding=utf-8
     username: root
     password: nevergiveup?
   cloud:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+
+  # 设置时间日期个格式
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
