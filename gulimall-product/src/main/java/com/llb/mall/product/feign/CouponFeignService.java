@@ -4,6 +4,7 @@ import com.llb.common.to.SkuReductionTo;
 import com.llb.common.to.SpuBoundTo;
 import com.llb.common.utils.R;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @Author liulebin
  * @Date 2021/5/6 21:31
  */
+@Component
 @FeignClient("mall-coupon")
 public interface CouponFeignService {
 
@@ -27,6 +29,6 @@ public interface CouponFeignService {
      * @param skuReductionTo
      * @return
      */
-    @PostMapping("")
+    @PostMapping("/coupon/skufullreduction/saveInfo")
     R saveSkuReduction(@RequestBody SkuReductionTo skuReductionTo);
 }

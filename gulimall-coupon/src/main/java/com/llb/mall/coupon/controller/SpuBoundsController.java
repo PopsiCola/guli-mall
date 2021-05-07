@@ -50,7 +50,7 @@ public class SpuBoundsController {
      * 保存
      */
     @PostMapping("/save")
-    public R save(@RequestBody SpuBoundsEntity spuBounds) {
+    public R saveSpuBounds(@RequestBody SpuBoundsEntity spuBounds) {
         spuBoundsService.save(spuBounds);
 
         return R.ok();

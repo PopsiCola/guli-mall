@@ -21,3 +21,8 @@ mybatis-plus:
       # 主键自增
       id-type: auto
 
+logging:
+  level:
+    com.llb.mall: debug
+
+

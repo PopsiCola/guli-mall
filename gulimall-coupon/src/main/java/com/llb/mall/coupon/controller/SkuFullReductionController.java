@@ -30,7 +30,7 @@ public class SkuFullReductionController {
      * sku的优惠、满减、会员价格信息
      */
     @PostMapping("/saveInfo")
-    public R saveInfo(@RequestBody SkuReductionTo skuReductionTo) {
+    public R saveSkuReduction(@RequestBody SkuReductionTo skuReductionTo) {
 
         skuFullReductionService.saveSkuReduction(skuReductionTo);
 
