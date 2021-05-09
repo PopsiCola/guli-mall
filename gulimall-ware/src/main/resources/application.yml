@@ -24,3 +24,13 @@ mybatis-plus:
     db-config:
       # 主键自增
       id-type: auto
+
+ribbon:
+  # 指的是建立连接所用的时间，适用于网络状况正常的情况下，两端连接所用的时间
+  ReadTimeout: 10000
+  # 指的是建立连接后从服务器读取到可用资源所用时间
+  ConnectTimeout: 10000
+
+feign:
+  hystrix:
+    enabled: false

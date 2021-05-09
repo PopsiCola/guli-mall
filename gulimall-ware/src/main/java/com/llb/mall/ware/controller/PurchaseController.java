@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.llb.mall.ware.vo.MergeVo;
+import com.llb.mall.ware.vo.PurchaseDoneVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,6 +71,19 @@ public class PurchaseController {
         PageUtils page = purchaseService.queryPage(params);
 
         return R.ok().put("page", page);
+    }
+
+    /**
+     * 完成采购
+     * @param doneVo
+     * @return
+     */
+    @PostMapping("/done")
+    public R done(@RequestBody PurchaseDoneVo doneVo) {
+
+        purchaseService.done(doneVo);
+
+        return R.ok();
     }
 
 
