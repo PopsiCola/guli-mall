@@ -1,6 +1,7 @@
 package com.llb.mall.ware.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import com.llb.mall.ware.vo.MergeVo;
@@ -34,6 +35,19 @@ public class PurchaseController {
         PageUtils page = purchaseService.queryPageUnreceive(params);
 
         return R.ok().put("page", page);
+    }
+
+    /**
+     * 领取采购单
+     * @param ids
+     * @return
+     */
+    @PostMapping("/received")
+    public R received(@RequestBody List<Long> ids) {
+
+        purchaseService.received(ids);
+
+        return R.ok();
     }
 
     /**
