@@ -1,6 +1,5 @@
 package com.llb.mall.ware.service.impl;
 
-import com.llb.common.to.SkuHasStockTo;
 import com.llb.common.utils.R;
 import com.llb.mall.ware.feign.ProductFeignService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -72,25 +69,6 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
             wareSkuDao.addStock(skuId, wareId, skuNum);
         }
 
-    }
-
-    /**
-     * 查询sku是否有库存
-     * @param skuIds
-     * @return
-     */
-    @Override
-    public List<SkuHasStockTo> getSkusHasStock(List<Long> skuIds) {
-
-        List<SkuHasStockTo> skuHasStockTos = skuIds.stream().map(skuId -> {
-            SkuHasStockTo skuHasStockTo = new SkuHasStockTo();
-            // 查询当前sku的总库存量
-            long stock = baseMapper.getSkuStock(skuId);
-            skuHasStockTo.setSkuId(skuId);
-            skuHasStockTo.setHasStock(stock > 0);
-            return skuHasStockTo;
-        }).collect(Collectors.toList());
-        return skuHasStockTos;
     }
 
 }
