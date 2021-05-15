@@ -17,5 +17,12 @@
         update wms_ware_sku set stock = stock + #{skuNum} where sku_id = #{skuId} and ware_id = #{wareId}
     </update>
 
+    <!--查询是否有库存-->
+    <select id="getSkuStock" resultType="java.lang.Long">
+        select sum(stock - stock_locked)
+        from wms_ware_sku
+        where sku_id = #{skuId}
+    </select>
+
 
 </mapper>
