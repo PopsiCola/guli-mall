@@ -1,5 +1,6 @@
 package com.llb.mall.product.service.impl;
 
+import com.llb.common.constant.ProductConstant;
 import com.llb.common.to.SkuHasStockTo;
 import com.llb.common.to.SkuReductionTo;
 import com.llb.common.to.SpuBoundTo;
@@ -7,6 +8,7 @@ import com.llb.common.to.es.SkuEsModel;
 import com.llb.common.utils.R;
 import com.llb.mall.product.entity.*;
 import com.llb.mall.product.feign.CouponFeignService;
+import com.llb.mall.product.feign.SearchFeignService;
 import com.llb.mall.product.feign.WareFeignService;
 import com.llb.mall.product.service.*;
 import com.llb.mall.product.vo.*;
@@ -57,6 +59,8 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
     private ProductAttrValueService attrValueService;
     @Autowired
     private WareFeignService wareFeignService;
+    @Autowired
+    private SearchFeignService searchFeignService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -297,6 +301,13 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
             return skuEsModel;
         }).collect(Collectors.toList());
 
-        // TODO 6.将数据发送给es进行保存
+        // 6.将数据发送给es进行保存
+        R r = searchFeignService.productStatusUp(skuEsModels);
+        if (r.getCode() == 0) {
+            // 远程调用成功，将spu状态改为上架
+            baseMapper.updateSpuStatus(spuId, ProductConstant.StatusEnum.SPU_UP.getCode());
+        } else {
+            // 远程调用失败
+        }
     }
 }

@@ -1,13 +1,11 @@
 package com.llb.mall.product.exception;
 
-import com.llb.common.exception.BizCodeEnum;
+import com.llb.common.constant.BizCodeEnum;
 import com.llb.common.utils.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
