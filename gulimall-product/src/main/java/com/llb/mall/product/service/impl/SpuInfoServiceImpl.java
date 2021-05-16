@@ -1,5 +1,6 @@
 package com.llb.mall.product.service.impl;
 
+import com.alibaba.fastjson.TypeReference;
 import com.llb.common.constant.ProductConstant;
 import com.llb.common.to.SkuHasStockTo;
 import com.llb.common.to.SkuReductionTo;
@@ -266,7 +267,9 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         Map<Long, Boolean> stockMap = null;
         try {
             R<List<SkuHasStockTo>> skusHasStock = wareFeignService.getSkusHasStock(skuIdList);
-            stockMap = skusHasStock.getData().stream()
+            TypeReference<List<SkuHasStockTo>> typeReference = new TypeReference<List<SkuHasStockTo>>() {
+            };
+            stockMap = skusHasStock.getData(typeReference).stream()
                     .collect(Collectors.toMap(SkuHasStockTo::getSkuId, item -> item.getHasStock()));
         } catch (Exception e) {
             log.error("库存服务查询异常：原因{}", e);
