@@ -266,7 +266,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         // 1.发送远程调用，库存系统查询是否有库存 hasStock
         Map<Long, Boolean> stockMap = null;
         try {
-            R<List<SkuHasStockTo>> skusHasStock = wareFeignService.getSkusHasStock(skuIdList);
+            R skusHasStock = wareFeignService.getSkusHasStock(skuIdList);
             TypeReference<List<SkuHasStockTo>> typeReference = new TypeReference<List<SkuHasStockTo>>() {
             };
             stockMap = skusHasStock.getData(typeReference).stream()
@@ -307,6 +307,22 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         // 6.将数据发送给es进行保存
         R r = searchFeignService.productStatusUp(skuEsModels);
         if (r.getCode() == 0) {
+            /**
+             * 调用feign的过程
+             *  1.构造请求数据，将对象转为json
+             *  RequestTemplate template = this.buildTemplateFromArgs.create(argv);
+             *  2. 发送请求进行执行，(执行成功会解码响应数据)
+             *  return this.executeAndDecode(template, options);
+             *  3.执行请求会有重试机制，最大重试5次
+             *  Retryer retryer = this.retryer.clone();
+             *  while(true) {
+             *             try {
+             *                 executeAndDecode(template, options);
+             *             } catch() {
+             *                 retryer.continueOrPropagate(e);
+             *             }
+             *             }
+             */
             // 远程调用成功，将spu状态改为上架
             baseMapper.updateSpuStatus(spuId, ProductConstant.StatusEnum.SPU_UP.getCode());
         } else {

@@ -21,5 +21,5 @@ public interface WareFeignService {
      * @return
      */
     @PostMapping("/ware/waresku/hasStock")
-    public R<List<SkuHasStockTo>> getSkusHasStock(@RequestBody List<Long> skuIds);
+    public R getSkusHasStock(@RequestBody List<Long> skuIds);
 }

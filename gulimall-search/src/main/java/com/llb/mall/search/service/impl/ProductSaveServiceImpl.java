@@ -57,7 +57,7 @@ public class ProductSaveServiceImpl implements ProductSaveService {
         List<String> collect = Arrays.stream(bulk.getItems()).map(item -> {
             return item.getId();
         }).collect(Collectors.toList());
-        log.info("商品上架成功，{}", collect);
+        log.info("商品上架成功，{}，返回数据：{}", collect, bulk.toString());
 
         return bool;
     }
