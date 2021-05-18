@@ -1,6 +1,5 @@
 package com.llb.common.to.es;
 
-import jdk.internal.util.xml.impl.Attrs;
 import lombok.Data;
 
 import java.math.BigDecimal;
