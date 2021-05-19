@@ -2,6 +2,7 @@ package com.llb.mall.product.service.impl;
 
 import com.llb.mall.product.entity.CategoryBrandRelationEntity;
 import com.llb.mall.product.service.CategoryBrandRelationService;
+import com.llb.mall.product.vo.Catelog2Vo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -90,6 +91,48 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         this.updateById(category);
 
         categoryBrandRelationService.updateCategory(category.getCatId(), category.getName());
+    }
+
+    // 查询所有的一级分类
+    @Override
+    public List<CategoryEntity> getLevel1Category() {
+        List<CategoryEntity> categoryEntities = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", 0));
+        return categoryEntities;
+    }
+
+    /**
+     * 查出分类
+     * @return
+     */
+    @Override
+    public Map<String, List<Catelog2Vo>> getCatelogJson() {
+        // 1.查出所有分类
+        List<CategoryEntity> level1Categorys = getLevel1Category();
+        // 2.封装数据
+        Map<String, List<Catelog2Vo>> collect = level1Categorys.stream().collect(Collectors.toMap(k -> k.getCatId().toString(), v -> {
+            // 1.每一个的一级分类，查询一级分类的二级分类
+            List<CategoryEntity> categoryEntities = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", v.getCatId()));
+            List<Catelog2Vo> catelog2Vos = null;
+            if (categoryEntities != null) {
+                catelog2Vos = categoryEntities.stream().map(l2 -> {
+                    Catelog2Vo catelog2Vo = new Catelog2Vo(v.getCatId().toString(), null, l2.getCatId().toString(), l2.getName());
+
+                    // 找当前二级分类的三级分类
+                    List<CategoryEntity> level3Catelogs = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", l2.getCatId()));
+                    if (level3Catelogs != null) {
+                        List<Catelog2Vo.Catelog3Vo> leve3Collect = level1Categorys.stream().map(l3 -> {
+                            // 封装指定格式数据
+                            Catelog2Vo.Catelog3Vo catelog3Vo = new Catelog2Vo.Catelog3Vo(l2.getCatId().toString(), l3.getCatId().toString(), l3.getName());
+                            return catelog3Vo;
+                        }).collect(Collectors.toList());
+                        catelog2Vo.setCatelog3List(leve3Collect);
+                    }
+                    return catelog2Vo;
+                }).collect(Collectors.toList());
+            }
+            return catelog2Vos;
+        }));
+        return collect;
     }
 
     /**

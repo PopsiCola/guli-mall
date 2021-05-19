@@ -1,5 +1,5 @@
 $(function(){
-    $.getJSON("index/json/catalog.json",function (data) {
+    $.getJSON("index/catalog.json",function (data) {
 
         var ctgall=data;
         $(".header_main_left_a").each(function(){
@@ -16,7 +16,7 @@ $(function(){
 
                         console.log(cata2link.html());
                         var li=$("<li></li>");
-                        var  ctg3List=ctg2["catalog3List"];
+                        var  ctg3List=ctg2["catelog3List"];
                         var len=0;
                         $.each(ctg3List,function (i,ctg3) {
                             var cata3link = $("<a href=\"http://search.gmall.com/list.html?catalog3Id="+ctg3.id+"\" style=\"color: #999;\">" + ctg3.name + "</a>");
