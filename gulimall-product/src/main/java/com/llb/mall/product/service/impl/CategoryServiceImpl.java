@@ -1,23 +1,27 @@
 package com.llb.mall.product.service.impl;
 
-import com.llb.mall.product.entity.CategoryBrandRelationEntity;
-import com.llb.mall.product.service.CategoryBrandRelationService;
-import com.llb.mall.product.vo.Catelog2Vo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.llb.common.utils.PageUtils;
 import com.llb.common.utils.Query;
-
 import com.llb.mall.product.dao.CategoryDao;
 import com.llb.mall.product.entity.CategoryEntity;
+import com.llb.mall.product.service.CategoryBrandRelationService;
 import com.llb.mall.product.service.CategoryService;
+import com.llb.mall.product.vo.Catelog2Vo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Service("categoryService")
@@ -25,6 +29,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     @Autowired
     private CategoryBrandRelationService categoryBrandRelationService;
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -106,9 +112,30 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      */
     @Override
     public Map<String, List<Catelog2Vo>> getCatelogJson() {
+        // 给缓存中存放json字符串
+        String catelogJSON = redisTemplate.opsForValue().get("catelogJSON");
+        if (StringUtils.isEmpty(catelogJSON)) {
+            // 1.去数据库查询，并进行缓存
+            Map<String, List<Catelog2Vo>> catelogJsonFromDb = getCatelogJsonFromDb();
+            // 2.查到的数据放入缓存，将对象转为json放到缓存中
+            String catelog = JSON.toJSONString(catelogJsonFromDb);
+            redisTemplate.opsForValue().set("catelogJSON", catelog);
+            return catelogJsonFromDb;
+        }
 
+        // 缓存中有数据，直接转为指定对象返回
+        Map<String, List<Catelog2Vo>> result = JSON.parseObject(catelogJSON, new TypeReference<Map<String, List<Catelog2Vo>>>() {});
+        return result;
+    }
+
+    /**
+     * 查询数据库分类信息
+     * @return
+     */
+    public Map<String, List<Catelog2Vo>> getCatelogJsonFromDb() {
         /**
          * 第一种优化：将数据库的多次查询变为一次（避免循环查询数据库）
+         * 添加redis缓存，将分类信息进行缓存
          */
         List<CategoryEntity> entities = baseMapper.selectList(null);
 

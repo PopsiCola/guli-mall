@@ -19,9 +19,14 @@ spring:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
 
-#  关闭缓存
+  # 关闭缓存
   thymeleaf:
     cache: false
+
+  # redis
+  redis:
+    host: 121.5.9.16
+    port: 6379
 
 
 mybatis-plus:
