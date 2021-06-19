@@ -12,6 +12,8 @@ import com.llb.mall.product.entity.CategoryEntity;
 import com.llb.mall.product.service.CategoryBrandRelationService;
 import com.llb.mall.product.service.CategoryService;
 import com.llb.mall.product.vo.Catelog2Vo;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -30,6 +32,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     private CategoryBrandRelationService categoryBrandRelationService;
     @Autowired
     private StringRedisTemplate redisTemplate;
+    @Autowired
+    private RedissonClient redissonClient;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -115,7 +119,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         String catelogJSON = redisTemplate.opsForValue().get("catelogJSON");
         if (StringUtils.isEmpty(catelogJSON)) {
             // 1.去数据库查询，并进行缓存
-            Map<String, List<Catelog2Vo>> catelogJsonFromDb = getCatelogJsonFromDbWithRedisLock();
+            Map<String, List<Catelog2Vo>> catelogJsonFromDb = getCatelogJsonFromDbWithRedissonLock();
             return catelogJsonFromDb;
         }
 
@@ -123,6 +127,27 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         Map<String, List<Catelog2Vo>> result = JSON.parseObject(catelogJSON, new TypeReference<Map<String, List<Catelog2Vo>>>() {});
         return result;
     }
+
+    /**
+     * 查询数据库分类信息(Redisson分布式锁)
+     * @return
+     */
+    public Map<String, List<Catelog2Vo>> getCatelogJsonFromDbWithRedissonLock() {
+
+        // 1.锁的名字
+        RLock lock = redissonClient.getLock("catalogJson-lock");
+        lock.lock();
+
+        Map<String, List<Catelog2Vo>> dataFromDb;
+        try {
+            // 加锁成功，执行业务
+            dataFromDb = getDataFromDb();
+        } finally {
+            lock.unlock();
+        }
+        return dataFromDb;
+    }
+
 
     /**
      * 查询数据库分类信息(redis分布式锁)
@@ -152,7 +177,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             return dataFromDb;
         } else {
             // 加锁失败，重试。自旋的方式
-            return getCatelogJsonFromDbWithRedisLock();
+            return getCatelogJsonFromDbWithRedissonLock();
         }
     }
 
