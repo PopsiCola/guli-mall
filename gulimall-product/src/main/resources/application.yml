@@ -28,6 +28,9 @@ spring:
     host: 121.5.9.16
     port: 6379
 
+  # cache
+  cache:
+    type: redis
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
