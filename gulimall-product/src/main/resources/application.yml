@@ -31,6 +31,11 @@ spring:
   # cache
   cache:
     type: redis
+    redis:
+      time-to-live: 360000
+      key-prefix: CACHE_ # key前缀，如果指定了前缀，就用我们指定的前缀，如果没有就默认使用缓存的名字作为前缀
+      use-key-prefix: true  # 使用key前缀，默认true
+      cache-null-values: true # 设置缓存为null，可以防止缓存穿透
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml

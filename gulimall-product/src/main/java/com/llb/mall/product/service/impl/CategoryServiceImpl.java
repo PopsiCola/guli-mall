@@ -103,12 +103,30 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         categoryBrandRelationService.updateCategory(category.getCatId(), category.getName());
     }
 
-    // 查询所有的一级分类
-    @Cacheable({"category"})
+    /**
+     * 查询所有的一级分类
+     * 1.每个需要缓存的数据我们需要来执行要放到哪个名字的缓存
+     * 2.@Cacheable({"category"})代表当前方法的结果需要缓存，如果缓存中有，方法不调用，
+     *                           如果缓存中没有，会调用方法，最后将方法的结果放入缓存
+     * 3.默认行为
+     *      1）如果缓存中有，方法不用调用。
+     *      2）key默认自动生成，缓存的名字 category:SimpleKey[](自主生成的key值)
+     *      3）缓存的value的值，默认使用jdk序列化机制，将序列化后的数据存入redis。默认时间ttl：-1。
+     *
+     *   自定义：
+     *      1.指定生成的缓存使用的key，key属性指定接受一个spEL
+     *      2.指定缓存的数据存活时间：配置文件中修改ttl
+     *      3.将数据保存为json格式
+     *      CacheAutoConfiguration -> RedisCacheConfiguration -> 自动配置了RedisCacheConfiguration ->
+     *      初始化所有的缓存 -> 每个缓存决定使用什么配置 -> 如果redisCacheConfiguration就用已有的，没有就用默认配置.
+     *      -> 想改缓存的配置，只需要给容器中放一个RedisCacheConfiguration即可 -> 就会应用到当前RedisCacheManager管理的
+     *      所有缓存中
+     * @return
+     */
+    @Cacheable(value = {"category"}, key = "#root.method.name")
     @Override
     public List<CategoryEntity> getLevel1Category() {
         List<CategoryEntity> categoryEntities = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", 0));
-        System.out.println("getLevel1Category");
         return categoryEntities;
     }
 
