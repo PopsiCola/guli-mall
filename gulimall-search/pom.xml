@@ -55,5 +55,11 @@
             <version>2.3.2.RELEASE</version>
             <scope>test</scope>
         </dependency>
+
+        <!--模板引擎thymeleaf-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
     </dependencies>
 </project>
