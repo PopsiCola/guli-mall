@@ -26,9 +26,9 @@ public class SearchParam {
     private String sort;
     /**
      * 显示是否有货
-     * hashStock=0/1
+     * hashStock=0/1（0：无库存，1：有库存）
      */
-    private Integer hasStock;
+    private Integer hasStock = 1;
     /**
      * 价格区间查询
      * skuPrice=1_500/_500/500_
@@ -39,6 +39,6 @@ public class SearchParam {
     // 按照属性进行筛选
     private List<String> attrs;
     // 页码
-    private Integer pageNum;
+    private Integer pageNum = 1;
 
 }

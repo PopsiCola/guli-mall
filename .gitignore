@@ -13,3 +13,4 @@ buildNumber.properties
 # 自定义过滤文件
 .idea
 **/target/
+/gulimall-product/src/test/java/com/llb/mall/
