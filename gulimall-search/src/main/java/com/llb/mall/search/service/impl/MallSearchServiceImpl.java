@@ -93,7 +93,7 @@ public class MallSearchServiceImpl implements MallSearchService {
             // 2.3 高亮
             HighlightBuilder highlightBuilder = new HighlightBuilder();
             highlightBuilder.field("skuTitle");
-            highlightBuilder.preTags("<b style='color:red>");
+            highlightBuilder.preTags("<b style='color:red'>");
             highlightBuilder.postTags("</b>");
             sourceBuilder.highlighter(highlightBuilder);
         }
@@ -130,7 +130,9 @@ public class MallSearchServiceImpl implements MallSearchService {
             }
         }
         // 1.2 bool - filter 按照库存是否有进行查询
-        boolQuery.filter(QueryBuilders.termQuery("hasStock", param.getHasStock() == 1 ? true : false));
+        if (param.getHasStock() != null) {
+            boolQuery.filter(QueryBuilders.termQuery("hasStock", param.getHasStock() == 1 ? true : false));
+        }
         // 1.2 bool - filter 按照价格区间
         if (!StringUtils.isEmpty(param.getSkuPrice())) {
             // 1_500/_500/500_
@@ -197,7 +199,7 @@ public class MallSearchServiceImpl implements MallSearchService {
         // 聚合分析出当前attr_id对应的名字
         attrIdAgg.subAggregation(AggregationBuilders.terms("attr_name_agg").field("attrs.attrName").size(1));
         // 聚合分析出当前attr_id对应的属性值
-        attrIdAgg.subAggregation(AggregationBuilders.terms("attr_value_agg").field("attrs.attrValue").size(1));
+        attrIdAgg.subAggregation(AggregationBuilders.terms("attr_value_agg").field("attrs.attrValue").size(20));
         attrAgg.subAggregation(attrIdAgg);
         // TODO：聚合属性信息
         sourceBuilder.aggregation(attrAgg);

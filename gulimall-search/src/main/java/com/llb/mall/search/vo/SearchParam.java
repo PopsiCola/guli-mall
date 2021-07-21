@@ -28,7 +28,7 @@ public class SearchParam {
      * 显示是否有货
      * hashStock=0/1（0：无库存，1：有库存）
      */
-    private Integer hasStock = 1;
+    private Integer hasStock;
     /**
      * 价格区间查询
      * skuPrice=1_500/_500/500_
