@@ -23,6 +23,8 @@ public class SearchResult {
     private Long total;
     // 总页码
     private Integer totalPages;
+    // 导航页码
+    private List<Integer> pageNavs;
 
     // 当前查询到的结果，所有涉及到的品牌
     private List<BrandVo> brands;
@@ -30,6 +32,17 @@ public class SearchResult {
     private List<AttrVo> attrs;
     // 当前查询到的结果，所设计到的所有属性
     private List<CatalogVo> catalogs;
+
+    // =================以上是返回给页面的所有信息======================
+    // 面包屑导航数据
+    private List<NavVo> navs;
+
+    @Data
+    public static class NavVo {
+        private String navName;
+        private String navValue;
+        private String link;
+    }
 
     @Data
     public static class BrandVo {

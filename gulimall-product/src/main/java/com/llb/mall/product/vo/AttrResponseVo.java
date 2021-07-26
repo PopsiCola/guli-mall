@@ -9,6 +9,8 @@ import lombok.Data;
 @Data
 public class AttrResponseVo extends AttrVo{
 
+    private Long attrGroupId;
+
     /**
      * 所属分类名称
      */

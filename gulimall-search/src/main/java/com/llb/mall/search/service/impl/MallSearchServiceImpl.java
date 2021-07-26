@@ -1,10 +1,14 @@
 package com.llb.mall.search.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.llb.common.to.es.SkuEsModel;
+import com.llb.common.utils.R;
 import com.llb.mall.search.config.ElasticSearchConfig;
 import com.llb.mall.search.constant.EsConstant;
+import com.llb.mall.search.feign.ProductFeignService;
 import com.llb.mall.search.service.MallSearchService;
+import com.llb.mall.search.vo.AttrResponseVo;
 import com.llb.mall.search.vo.SearchParam;
 import com.llb.mall.search.vo.SearchResult;
 import org.apache.commons.lang.StringUtils;
@@ -33,6 +37,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,6 +52,9 @@ public class MallSearchServiceImpl implements MallSearchService {
 
     @Autowired
     private RestHighLevelClient client;
+
+    @Autowired
+    private ProductFeignService productFeignService;
 
     /**
      * @param param 检索所有参数
@@ -315,6 +324,43 @@ public class MallSearchServiceImpl implements MallSearchService {
         int totalPages = (int) ((total + EsConstant.PRODUCT_PAGESIZE - 1) / EsConstant.PRODUCT_PAGESIZE);
         searchResult.setTotalPages(totalPages);
 
+        // 7.导航页码
+        List<Integer> pageNavs = new ArrayList<>();
+        for (int i = 1; i <= totalPages; i++) {
+            pageNavs.add(i);
+        }
+        searchResult.setPageNavs(pageNavs);
+
+        // 8.构建面包屑导航功能
+        if (param.getAttrs() != null && param.getAttrs().size() > 0) {
+            List<SearchResult.NavVo> navVos = param.getAttrs().stream().map(attr -> {
+                // 1.分析每个attrs传过来的查询参数值
+                SearchResult.NavVo navVo = new SearchResult.NavVo();
+                String[] s = attr.split("_");
+                navVo.setNavValue(s[1]);
+                R r = productFeignService.attrInfo(Long.parseLong(s[0]));
+                if (r.getCode() == 0) {
+                    AttrResponseVo data = r.getData("attr", new TypeReference<AttrResponseVo>() {
+                    });
+                    navVo.setNavName(data.getAttrName());
+                } else {
+                    navVo.setNavName(s[0]);
+                }
+                // 2.取消了这个面包屑之后，我们要跳转到哪个地方。将请求地址的url里面的当前置空
+                // 拿到所有的查询条件，去掉当前
+                String encode = null;
+                try {
+                    encode = URLEncoder.encode(attr, "utf-8");
+                    encode = encode.replace("+", "%20");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                String replace = param.get_queryString().replaceAll("&attrs=" + encode, "");
+                navVo.setLink("http://localhost:12000/list.html?" + replace);
+                return navVo;
+            }).collect(Collectors.toList());
+            searchResult.setNavs(navVos);
+        }
         return searchResult;
     }
 }

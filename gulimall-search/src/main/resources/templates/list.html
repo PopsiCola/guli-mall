@@ -764,7 +764,7 @@
         </div>
         <div class="JD_ipone_one c">
             <!-- 遍历面包屑功能 -->
-            <!--<a th:href="${nav.link}" th:each="nav:${result.navs}"><span th:text="${nav.navName}"></span>：<span th:text="${nav.navValue}"></span> x</a>-->
+            <a th:href="${nav.link}" th:each="nav:${result.navs}"><span th:text="${nav.navName}"></span>：<span th:text="${nav.navValue}"></span> x</a>
         </div>
 
         <i><img src="search/image/right-@1x.png" alt=""></i>
@@ -790,8 +790,8 @@
                         <div class="sl_value_logo">
                             <ul>
                                 <li th:each="brand: ${result.getBrands()}">
-                                    <a href="search/#">
-                                    <!--<a href="#"  th:href="${'javascript:searchProducts(&quot;brandId&quot;,'+brand.brandId+')'}">-->
+                                    <!--<a href="search/#">-->
+                                    <a href="#" th:href="${'javascript:searchProducts(&quot;brandId&quot;,'+brand.brandId+')'}">
                                         <img src="search/img/598033b4nd6055897.jpg" alt="" th:src="${brand.brandImg}">
                                         <div th:text="${brand.brandName}">
                                             华为(HUAWEI)
@@ -1238,7 +1238,7 @@
                     <!--分页-->
                     <div class="filter_page">
                         <div class="page_wrap">
-                           <!-- <span class="page_span1">
+                            <span class="page_span1">
                                 <a class="page_a" href="#" th:if="${result.pageNum>1}" th:attr="pn=${result.getPageNum()-1}">
                                     < 上一页
                                 </a>
@@ -1251,7 +1251,7 @@
                                 <a href="#" class="page_a" th:if="${result.pageNum<result.totalPages}" th:attr="pn=${result.getPageNum()+1}">
                                     下一页 >
                                 </a>
-                            </span>-->
+                            </span>
                             <span class="page_span2">
                                 <em>共<b th:text="${result.totalPages}">169</b>页&nbsp;&nbsp;到第</em>
                                 <input type="number" value="1" class="page_input">
